@@ -1,31 +1,25 @@
-const USERS_API = "https://jsonplaceholder.typicode.com/users";
+// DOM
+const button = document.getElementById("addBtn");
+const lists = document.getElementById("lists");
 
-async function callApi() {
-  const res = await window.fetch(USERS_API);
+// 関数（メソッド）
+function addList(user) {
+  const list = document.createElement("li");
+  list.innerText = user.name;
+  lists.appendChild(list);
+}
+
+async function getUsers() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/users");
   const users = await res.json();
-  console.log(users);
+  return users;
 }
 
-callApi();
-
-// then
-function callApiWithThen() {
-  const users = fetch(USERS_API)
-    .then(function (res) {
-      return res.json();
-    })
-    .then(function (users) {
-      console.log(users);
-    });
+async function listUsers() {
+  const users = await getUsers();
+  users.forEach(addList);
 }
 
-// XMLHttpRequest
-function callApiWithXhr() {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", USERS_API);
-  xhr.responseType = "json";
-  xhr.send();
-  xhr.onload = function () {
-    console.log(xhr.response);
-  };
-}
+// イベント
+window.addEventListener("load", listUsers);
+button.addEventListener("click", listUsers);
